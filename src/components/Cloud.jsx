@@ -6,12 +6,12 @@ Command: npx gltfjsx@6.2.13 public/models/cloud/model.glb
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export function Cloud({opacity, ...props}) {
+export function Cloud({ opacity, ...props }) {
   const { nodes, materials } = useGLTF('models/cloud/model.glb')
   return (
     <group {...props} dispose={null}>
       <mesh geometry={nodes.Node.geometry}>
-        <meshStandardMaterial {...materials['lambert2SG.001']} opacity={opacity} transparent/>
+        <meshStandardMaterial opacity={opacity} transparent envMapIntensity={2} />
       </mesh>
     </group>
   )

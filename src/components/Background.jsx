@@ -2,23 +2,42 @@ import { Environment, Sphere } from "@react-three/drei";
 import { Gradient, LayerMaterial } from "lamina"
 import * as THREE from "three";
 
-export function Background(props) {
+export function Background({ ...props }) {
+    const colorA = "#0923be";
+    const colorB = "#ffad30";
+    const start = 0.2;
+    const end = -0.5;
+
     return <>
-        <Environment preset="sunset" />
-        <Sphere scale={[100, 100, 100]} rotation-y={Math.PI / 2}>
+        <Sphere scale={[500, 500, 500]} rotation-y={Math.PI / 2}>
             <LayerMaterial
-                lighting="physical"
-                transmission={1}
+                color="#ffffff"
                 side={THREE.BackSide}
             >
                 <Gradient
-                    colorA={"#357ca1"}
-                    colorB={"white"}
+                    colorA={colorA}
+                    colorB={colorB}
                     axes="y"
-                    start={0}
-                    end={-0.5}
+                    start={start}
+                    end={end}
                 />
             </LayerMaterial>
         </Sphere>
+        <Environment resolution={256}>
+            <Sphere scale={[100, 100, 100]} rotation-y={Math.PI / 2} rotation-x={Math.PI / 2}>
+                <LayerMaterial
+                    color="#ffffff"
+                    side={THREE.BackSide}
+                >
+                    <Gradient
+                        colorA={colorA}
+                        colorB={colorB}
+                        axes="y"
+                        start={start}
+                        end={end}
+                    />
+                </LayerMaterial>
+            </Sphere>
+        </Environment>
     </>
 }
