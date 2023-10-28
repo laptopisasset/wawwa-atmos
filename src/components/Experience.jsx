@@ -1,16 +1,14 @@
-import { Environment, Float, Line, OrbitControls, PerspectiveCamera, useScroll } from "@react-three/drei";
-import { Background } from "./Background";
-import { Airplane } from "./Airplane";
-import { Cloud } from "./Cloud";
+import { Float, PerspectiveCamera, useScroll } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
+import { Airplane } from "./Airplane";
+import { Background } from "./Background";
+import { Cloud } from "./Cloud";
 
+const LINE_NB_POINTS = 12000;
 
-const LINE_NB_POINTS = 2000;
-
-export function Experience() {
-
+export const Experience = () => {
     const curve = useMemo(() => {
         return new THREE.CatmullRomCurve3(
             [
@@ -33,20 +31,19 @@ export function Experience() {
     }, []);
 
     const linePoints = useMemo(() => {
-        return curve.getPoints(LINE_NB_POINTS)
-    }, [curve])
+        return curve.getPoints(LINE_NB_POINTS);
+    }, [curve]);
 
     const shape = useMemo(() => {
         const shape = new THREE.Shape();
         shape.moveTo(0, -0.2);
         shape.lineTo(0, 0.2);
 
-        return shape
-    }, [curve])
+        return shape;
+    }, [curve]);
 
     const cameraGroup = useRef();
     const scroll = useScroll();
-    const airplane = useRef();
 
     useFrame((_state, delta) => {
         const curPointIndex = Math.min(
@@ -73,7 +70,6 @@ export function Experience() {
                 angleRotation
             )
         );
-
         const targetCameraQuaternion = new THREE.Quaternion().setFromEuler(
             new THREE.Euler(
                 cameraGroup.current.rotation.x,
@@ -85,10 +81,10 @@ export function Experience() {
         airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
         cameraGroup.current.quaternion.slerp(targetCameraQuaternion, delta * 2);
 
-
         cameraGroup.current.position.lerp(curPoint, delta * 24);
-    })
+    });
 
+    const airplane = useRef();
 
     return (
         <>
@@ -98,13 +94,15 @@ export function Experience() {
                 <PerspectiveCamera position={[0, 0, 5]} fov={30} makeDefault />
                 <group ref={airplane}>
                     <Float floatIntensity={2} speed={2}>
-                        <Airplane rotation-y={Math.PI / 2} scale={[0.2, 0.2, 0.2]} position-y={0.1} />
+                        <Airplane
+                            rotation-y={Math.PI / 2}
+                            scale={[0.2, 0.2, 0.2]}
+                            position-y={0.1}
+                        />
                     </Float>
                 </group>
             </group>
 
-
-            {/* LINE */}
             {/* LINE */}
             <group position-y={-2}>
                 <mesh>
@@ -122,37 +120,14 @@ export function Experience() {
                 </mesh>
             </group>
 
-
+            {/* CLOUDS */}
+            <Cloud opacity={0.5} scale={[0.3, 0.3, 0.3]} position={[-2, 1, -3]} />
+            <Cloud opacity={0.5} scale={[0.2, 0.3, 0.4]} position={[1.5, -0.5, -2]} />
             <Cloud
-                opacity={0.5}
-                scale={[0.3, 0.3, 0.3]}
-                position={[-2, 1, -3]}
-            />
-            <Cloud
-                opacity={0.5}
-                scale={[0.3, 0.3, 0.3]}
-                position={[2, 1, -3]}
-            />
-            <Cloud
-                opacity={0.75}
-                scale={[0.5, 0.5, 0.5]}
-                position={[-4, 3, -5]}
-            />
-            <Cloud
-                opacity={0.75}
-                scale={[0.5, 0.5, 0.5]}
-                position={[4, 3, -12]}
-            />
-            <Cloud
-                opacity={0.5}
+                opacity={0.7}
+                scale={[0.3, 0.3, 0.4]}
                 rotation-y={Math.PI / 9}
-                scale={[0.6, 0.6, 0.6]}
-                position={[-4, 1, -7]}
-            />
-            <Cloud
-                opacity={0.75}
-                scale={[0.75, 0.75, 0.75]}
-                position={[4, 3, -12]}
+                position={[2, -0.2, -2]}
             />
             <Cloud
                 opacity={0.7}
@@ -160,16 +135,8 @@ export function Experience() {
                 rotation-y={Math.PI / 9}
                 position={[1, -0.2, -12]}
             />
-            <Cloud
-                opacity={0.7}
-                scale={[0.5, 0.5, 0.5]}
-                position={[-1, 1, -53]}
-            />
-            <Cloud
-                opacity={0.3}
-                scale={[0.8, 0.8, 0.8]}
-                position={[0, 1, -100]}
-            />
+            <Cloud opacity={0.7} scale={[0.5, 0.5, 0.5]} position={[-1, 1, -53]} />
+            <Cloud opacity={0.3} scale={[0.8, 0.8, 0.8]} position={[0, 1, -100]} />
         </>
-    )
-}
+    );
+};
