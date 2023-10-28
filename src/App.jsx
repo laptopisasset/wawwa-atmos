@@ -1,13 +1,15 @@
-import {Canvas} from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import './App.css';
 import { Experience } from "./components/Experience";
+import { ScrollControls } from "@react-three/drei";
 
 function App() {
 
   return (
-    <Canvas camera={{position: [3, 3, 3], fov: 30}}>
-      <color attach="background" args={["#ececec"]}/>
-      <Experience />
+    <Canvas>
+      <ScrollControls pages={5} damping={0.3}>
+        <Experience />
+      </ScrollControls>
     </Canvas>
   )
 }
